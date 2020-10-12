@@ -19,7 +19,6 @@ if(POLICY CMP0057)
     cmake_policy(SET CMP0057 NEW) # support IN_LIST
 endif()
 
-
 # 3.0 or higher is strongly suggested; build settings (target_compile_options/etc...) sometimes do not get propagated properly under certain conditions prior to this version
 # Making this a hard requirement is potentially disruptive to existing customers who aren't affected by the bad behavior though, so just warn for now
 if(CMAKE_MAJOR_VERSION LESS 3)
@@ -71,6 +70,9 @@ option(ENABLE_VIRTUAL_OPERATIONS "This option usually works with REGENERATE_CLIE
 
 set(BUILD_ONLY "" CACHE STRING "A semi-colon delimited list of the projects to build")
 set(CPP_STANDARD "11" CACHE STRING "Flag to upgrade the C++ standard used. The default is 11. The minimum is 11.")
+set(BUILD_ONLY "lambda" "sns")
+set(BUILD_DEPS ON)
+set(AUTORUN_UNIT_TESTS OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -322,9 +324,13 @@ add_sdks()
 # for user friendly cmake usage
 include(setup_cmake_find_module)
 
-# for generating make uninstall target
-if (NOT TARGET uninstall)
-    ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${AWS_NATIVE_SDK_ROOT}/cmake/make_uninstall.cmake")
-else()
-    ADD_CUSTOM_TARGET(uninstall-awssdk "${CMAKE_COMMAND}" -P "${AWS_NATIVE_SDK_ROOT}/cmake/make_uninstall.cmake")
-endif()
+target_compile_options(aws-cpp-sdk-core PUBLIC -Wno-overloaded-virtual)
+target_compile_options(aws-cpp-sdk-lambda PUBLIC -Wno-overloaded-virtual)
+target_compile_options(aws-cpp-sdk-sns PUBLIC -Wno-overloaded-virtual)
+
+## for generating make uninstall target
+#if (NOT TARGET uninstall)
+#    ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${AWS_NATIVE_SDK_ROOT}/cmake/make_uninstall.cmake")
+#else()
+#    ADD_CUSTOM_TARGET(uninstall-awssdk "${CMAKE_COMMAND}" -P "${AWS_NATIVE_SDK_ROOT}/cmake/make_uninstall.cmake")
+#endif()
