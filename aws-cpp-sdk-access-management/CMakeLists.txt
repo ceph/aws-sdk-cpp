@@ -33,7 +33,7 @@ if(USE_WINDOWS_DLL_SEMANTICS AND BUILD_SHARED_LIBS)
     add_definitions("-DAWS_ACCESS_MANAGEMENT_EXPORTS")
 endif()
 
-add_library(${PROJECT_NAME} ${ACCESS_MANAGEMENT_SRC})
+add_library(${PROJECT_NAME} SHARED ${ACCESS_MANAGEMENT_SRC})
 add_library(AWS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 set_compiler_flags(${PROJECT_NAME})
@@ -46,6 +46,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PLATFORM_DEP_LIBS} ${PROJECT_LIB
 
 setup_install()
 
-install (FILES ${AWS_ACCESS_MANAGEMENT_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/access-management)
-
-do_packaging()

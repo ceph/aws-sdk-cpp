@@ -49,7 +49,7 @@ set(KINESIS_INCLUDES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 )
 
-add_library(${PROJECT_NAME} ${KINESIS_SRC})
+add_library(${PROJECT_NAME} SHARED ${KINESIS_SRC})
 add_library(AWS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 set_compiler_flags(${PROJECT_NAME})
@@ -67,10 +67,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PLATFORM_DEP_LIBS} ${PROJECT_LIB
 
 
 setup_install()
-
-install (FILES ${AWS_KINESIS_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/kinesis)
-install (FILES ${AWS_KINESIS_MODEL_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/kinesis/model)
-
-do_packaging()
-
 

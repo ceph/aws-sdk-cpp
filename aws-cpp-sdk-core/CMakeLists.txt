@@ -409,7 +409,7 @@ if(MSVC)
 
 endif(MSVC)
 
-add_library(${PROJECT_NAME} ${AWS_NATIVE_SDK_SRC})
+add_library(${PROJECT_NAME} SHARED ${AWS_NATIVE_SDK_SRC})
 add_library(AWS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC "AWS_SDK_VERSION_MAJOR=${AWSSDK_VERSION_MAJOR}")
@@ -493,9 +493,7 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${PLATFORM_DEP_LIBS} ${CLIENT_LIBS} ${CRYPTO_LIBS} ${AWS_SDK_ADDITIONAL_LIBRARIES})
 
-find_package(aws-c-event-stream REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC AWS::aws-c-event-stream)
+target_link_libraries(${PROJECT_NAME} PUBLIC aws-c-event-stream)
 
 
 if(USE_WINDOWS_DLL_SEMANTICS)
@@ -534,60 +532,5 @@ if(SIMPLE_INSTALL)
     generate_pkgconfig_link_flags(ALL_DEP_LIBS ALL_DEP_LIBS_LINK_FLAGS)
     set(ALL_DEP_LIBS_LINK_FLAGS "${ALL_DEP_LIBS_LINK_FLAGS}")
     configure_file("${AWS_NATIVE_SDK_ROOT}/toolchains/pkg-config.pc.in" "${PROJECT_NAME}.pc" @ONLY)
-
-    if(BUILD_SHARED_LIBS)
-        install(
-            FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
-            DESTINATION ${LIBRARY_DIRECTORY}/pkgconfig)
-    endif()
 endif()
-
-install (FILES ${AWS_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core)
-install (FILES ${AWS_AUTH_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/auth)
-install (FILES ${AWS_CLIENT_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/client)
-install (FILES ${AWS_INTERNAL_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/internal)
-install (FILES ${NET_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/net)
-install (FILES ${HTTP_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/http)
-install (FILES ${HTTP_STANDARD_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/http/standard)
-install (FILES ${CONFIG_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/config/)
-install (FILES ${MONITORING_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/monitoring)
-install (FILES ${PLATFORM_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/platform)
-install (FILES ${UTILS_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils)
-install (FILES ${UTILS_EVENT_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/event)
-install (FILES ${UTILS_BASE64_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/base64)
-install (FILES ${UTILS_CRYPTO_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/crypto)
-install (FILES ${UTILS_JSON_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/json)
-install (FILES ${UTILS_RETRY_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/retry)
-install (FILES ${UTILS_XML_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/xml)
-install (FILES ${UTILS_LOGGING_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/logging)
-install (FILES ${UTILS_MEMORY_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/memory)
-install (FILES ${UTILS_STL_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/memory/stl)
-install (FILES ${UTILS_RATE_LIMITER_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/ratelimiter)
-install (FILES ${UTILS_STREAM_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/stream)
-install (FILES ${UTILS_THREADING_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/threading)
-install (FILES ${CJSON_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/external/cjson)
-install (FILES ${TINYXML2_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/external/tinyxml2)
-
-# android logcat headers
-if(PLATFORM_ANDROID)
-    install (FILES ${UTILS_LOGGING_ANDROID_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/logging/android)
-endif()
-
-# http client headers
-if(ENABLE_CURL_CLIENT)
-    install (FILES ${HTTP_CURL_CLIENT_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/http/curl)
-elseif(ENABLE_WINDOWS_CLIENT)
-    install (FILES ${HTTP_WINDOWS_CLIENT_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/http/windows)
-endif()
-
-# encryption headers
-if(ENABLE_BCRYPT_ENCRYPTION)
-  install (FILES ${UTILS_CRYPTO_BCRYPT_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/crypto/bcrypt)
-elseif(ENABLE_OPENSSL_ENCRYPTION)
-  install (FILES ${UTILS_CRYPTO_OPENSSL_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/crypto/openssl)
-elseif(ENABLE_COMMONCRYPTO_ENCRYPTION)
-  install (FILES ${UTILS_CRYPTO_COMMONCRYPTO_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/core/utils/crypto/commoncrypto)
-endif()
-
-do_packaging()
 

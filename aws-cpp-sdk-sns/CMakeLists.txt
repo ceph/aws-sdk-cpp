@@ -49,7 +49,7 @@ set(SNS_INCLUDES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 )
 
-add_library(${PROJECT_NAME} ${SNS_SRC})
+add_library(${PROJECT_NAME} SHARED ${SNS_SRC})
 add_library(AWS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 set_compiler_flags(${PROJECT_NAME})
@@ -67,10 +67,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PLATFORM_DEP_LIBS} ${PROJECT_LIB
 
 
 setup_install()
-
-install (FILES ${AWS_SNS_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/sns)
-install (FILES ${AWS_SNS_MODEL_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/sns/model)
-
-do_packaging()
-
 
