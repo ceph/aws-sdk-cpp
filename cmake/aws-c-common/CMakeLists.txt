@@ -150,12 +150,6 @@ endif()
 
 aws_prepare_shared_lib_exports(${PROJECT_NAME})
 
-if (BUILD_SHARED_LIBS)
-   set (TARGET_DIR "shared")
-else()
-   set (TARGET_DIR "static")
-endif()
-
 # This should come last, to ensure all variables defined by cmake will be available for export
 configure_file(${CONFIG_HEADER_TEMPLATE}
         ${GENERATED_CONFIG_HEADER}

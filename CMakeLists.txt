@@ -231,20 +231,13 @@ add_sdks()
 # for user friendly cmake usage
 include(setup_cmake_find_module)
 
-target_compile_options(aws-cpp-sdk-core PUBLIC -Wno-overloaded-virtual)
+target_compile_options(aws-cpp-sdk-core PUBLIC -Wno-overloaded-virtual -Wno-unused-function)
 target_compile_options(aws-cpp-sdk-lambda PUBLIC -Wno-overloaded-virtual)
 target_compile_options(aws-cpp-sdk-sns PUBLIC -Wno-overloaded-virtual)
 
 # build 3rd party dependencies
-
-set(TMP_PROJECT_NAME ${CMAKE_PROJECT_NAME})
-
-set(CMAKE_PROJECT_NAME "aws-c-common")
 include("cmake/aws-c-common/CMakeLists.txt")
-set(CMAKE_PROJECT_NAME "aws-checksums")
 include("cmake/aws-checksums/CMakeLists.txt")
-set(CMAKE_PROJECT_NAME "aws-c-event-stream")
 include("cmake/aws-c-event-stream/CMakeLists.txt")
 
-set(CMAKE_PROJECT_NAME ${TMP_PROJECT_NAME})
 

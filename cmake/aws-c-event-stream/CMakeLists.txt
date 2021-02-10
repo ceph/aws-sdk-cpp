@@ -63,24 +63,18 @@ file(GLOB EVENT_STREAM_SRC
     ${AWS_EVENT_STREAM_SRC}
 )
 
-add_library(${CMAKE_PROJECT_NAME} SHARED ${EVENT_STREAM_SRC})
-aws_set_common_properties(${CMAKE_PROJECT_NAME})
-aws_add_sanitizers(${CMAKE_PROJECT_NAME})
-aws_prepare_symbol_visibility_args(${CMAKE_PROJECT_NAME} "AWS_EVENT_STREAM")
+add_library(${PROJECT_NAME} SHARED ${EVENT_STREAM_SRC})
+aws_set_common_properties(${PROJECT_NAME})
+aws_add_sanitizers(${PROJECT_NAME})
+aws_prepare_symbol_visibility_args(${PROJECT_NAME} "AWS_EVENT_STREAM")
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/aws-c-event-stream/include>
     $<INSTALL_INTERFACE:include>)
 
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES VERSION 1.0.0)
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION 1.0.0)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC aws-c-common aws-checksums)
+target_link_libraries(${PROJECT_NAME} PUBLIC aws-c-common aws-checksums)
 
-aws_prepare_shared_lib_exports(${CMAKE_PROJECT_NAME})
-
-if (BUILD_SHARED_LIBS)
-   set (TARGET_DIR "shared")
-else()
-   set (TARGET_DIR "static")
-endif()
+aws_prepare_shared_lib_exports(${PROJECT_NAME})
 

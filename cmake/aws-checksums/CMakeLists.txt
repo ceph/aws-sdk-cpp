@@ -41,13 +41,13 @@ set_target_properties(aws-checksums PROPERTIES LINKER_LANGUAGE C)
 set(CMAKE_C_FLAGS_DEBUGOPT "")
 set_property(TARGET aws-checksums PROPERTY C_STANDARD 99)
 
-target_compile_options(aws-checksums PRIVATE -fPIC -O2)
+target_compile_options(${PROJECT_NAME} PRIVATE -fPIC -O2)
 
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
+target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/aws-checksums/include>
     $<INSTALL_INTERFACE:include>)
 
-target_link_libraries(aws-checksums ${PLATFORM_LIBS})
+target_link_libraries(${PROJECT_NAME} ${PLATFORM_LIBS})
 
 set(LIBRARY_DIRECTORY lib)
 # Set the default lib installation path on GNU systems with GNUInstallDirs
@@ -56,11 +56,5 @@ if (UNIX AND NOT APPLE)
     set(LIBRARY_DIRECTORY ${CMAKE_INSTALL_LIBDIR})
 endif()
 
-aws_prepare_shared_lib_exports(${CMAKE_PROJECT_NAME})
-
-if (BUILD_SHARED_LIBS)
-   set (TARGET_DIR "shared")
-else()
-   set (TARGET_DIR "static")
-endif()
+aws_prepare_shared_lib_exports(${PROJECT_NAME})
 
