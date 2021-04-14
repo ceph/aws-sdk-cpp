@@ -49,7 +49,7 @@ set(IAM_INCLUDES
     "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 )
 
-add_library(${PROJECT_NAME} ${IAM_SRC})
+add_library(${PROJECT_NAME} SHARED ${IAM_SRC})
 add_library(AWS::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 set_compiler_flags(${PROJECT_NAME})
@@ -67,10 +67,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PLATFORM_DEP_LIBS} ${PROJECT_LIB
 
 
 setup_install()
-
-install (FILES ${AWS_IAM_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/iam)
-install (FILES ${AWS_IAM_MODEL_HEADERS} DESTINATION ${INCLUDE_DIRECTORY}/aws/iam/model)
-
-do_packaging()
-
 

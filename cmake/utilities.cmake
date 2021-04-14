@@ -33,19 +33,11 @@ endfunction(enable_unity_build)
 
 macro(setup_install)
     if(SIMPLE_INSTALL)
-        configure_file("${AWS_NATIVE_SDK_ROOT}/toolchains/pkg-config.pc.in" "${PROJECT_NAME}.pc" @ONLY)
-
         install( TARGETS ${PROJECT_NAME}
                 EXPORT "${PROJECT_NAME}-targets"
                 ARCHIVE DESTINATION ${ARCHIVE_DIRECTORY}
                 LIBRARY DESTINATION ${LIBRARY_DIRECTORY}
                 RUNTIME DESTINATION ${BINARY_DIRECTORY} )
-
-        if (BUILD_SHARED_LIBS)
-            install(
-                FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
-                DESTINATION ${LIBRARY_DIRECTORY}/pkgconfig)
-        endif()
     else()
         if(PLATFORM_CUSTOM)
             install_custom_library(${PROJECT_NAME})
@@ -57,46 +49,4 @@ macro(setup_install)
         endif()
     endif()
 endmacro()
-
-macro(do_packaging)
-    if(SIMPLE_INSTALL)
-        write_basic_package_version_file(
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
-            VERSION ${PROJECT_VERSION}
-            COMPATIBILITY AnyNewerVersion
-        )
-
-        export(EXPORT "${PROJECT_NAME}-targets"
-            FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-targets.cmake"
-        )
-
-    if(${PROJECT_NAME} STREQUAL "aws-cpp-sdk-core")
-        configure_file(
-            "${AWS_NATIVE_SDK_ROOT}/toolchains/core-config.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-            @ONLY)
-    else()
-        configure_file(
-            "${AWS_NATIVE_SDK_ROOT}/toolchains/cmakeProjectConfig.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-            @ONLY)
-    endif()
-
-        set(ConfigPackageLocation "${LIBRARY_DIRECTORY}/cmake/${PROJECT_NAME}")
-        install(EXPORT "${PROJECT_NAME}-targets"
-            FILE "${PROJECT_NAME}-targets.cmake"
-            DESTINATION ${ConfigPackageLocation}
-        )
-
-        install(
-            FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
-            DESTINATION
-            ${ConfigPackageLocation}
-            COMPONENT
-            Devel)
-    endif()
-endmacro()
-
 
